@@ -286,7 +286,7 @@ unsafe extern "C" {
     pub fn mpz_probab_safe_prime_p_next(rop: mpz_ptr, n: mpz_ptr, reps: ::std::ffi::c_int);
 }
 
-/*
+/* Not used as internal functions of GMPMEE
 unsafe extern "C" {
     #[doc = " Allocates an array of <code>len</code> <code>mpz_ptr</code>.\n\n @param len Number of elements in array.\n @return Pointer to allocated array."]
     pub fn gmpmee_array_alloc(len: usize) -> *mut mpz_ptr;
