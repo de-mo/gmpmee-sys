@@ -1,0 +1,32 @@
+[package]
+name = "gmpmee-sys"
+version = "0.1.0"
+edition = "2021"
+categories = ["external-ffi-bindings", "mathematics", "no-std"]
+description = "Rust FFI bindings for GMPMEE"
+documentation = "https://docs.rs/gmp-mpfr-sys"
+keywords = ["bignum", "ffi", "gmp", "math", "numerics"]
+license = "LGPL-3.0+"
+readme = "README.md"
+repository = "https://github.com/de-mo/gmpmee-sys"
+rust-version = "1.83"
+build = "build.rs"
+links = "gmpmee"
+
+
+[dependencies]
+libc = { default-features = false, version = "0.2.44" }
+gmp-mpfr-sys = "1"
+
+[target.'cfg(target_os = "windows")'.build-dependencies.windows-sys]
+features = [
+    "Win32_Foundation",
+    "Win32_Globalization",
+    "Win32_System_Com",
+    "Win32_UI_Shell",
+]
+version = "0.59"
+
+[build-dependencies]
+dirs = "5"
+cc = "1.0"
