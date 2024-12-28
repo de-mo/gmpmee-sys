@@ -4,7 +4,7 @@ The gmpmee-sys crate provides Rust FFI bindings to the [GMP Modular Exponentiati
 
 The crate is strongly inspired from [gmp-mpfr-sys](https://crates.io/crates/gmp-mpfr-sys). In particular the file `build.rs` is copied from this crate, and adapted to the needs of the gmpmee-sys crate. No cache is implemented, since the compilation is quick.
 
-### Types
+## Types
 
 Unlike in the C libraries, the types (e.g. `gmpmee_spowm_tab`, `gmpmee_fpowm_tab`) are defined directly as structs, not as single-element
 arrays.
