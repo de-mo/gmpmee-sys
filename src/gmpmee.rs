@@ -14,7 +14,7 @@
 // a copy of the GNU General Public License along with this program. If not, see
 // <https://www.gnu.org/licenses/>.
 
-#![allow(non_camel_case_types)]
+#![allow(non_camel_case_types, dead_code)]
 use gmp_mpfr_sys::gmp::{mpz_ptr, mpz_srcptr, mpz_t, randstate_ptr, size_t};
 
 #[doc = " Stores the tables of precomputed products of subsets of the\n bases. Each table contains the precomputed products for a range of\n a given width of the bases."]
@@ -51,7 +51,7 @@ const _: () = {
 #[link(name = "gmpmee", kind = "static")]
 unsafe extern "C" {
     #[doc = " Allocates and initializes a table for the given modulus, block\n width, and total number of bases.\n\n @param table Table to be initialized\n @param len Number of bases in the simultaneous exponentiation.\n @param modulus Modulus.\n @param block_width Number of bases used to build each subtable."]
-    pub fn gmpmee_spowm_init(
+    fn gmpmee_spowm_init(
         table: *mut gmpmee_spowm_tab,
         len: usize,
         modulus: mpz_ptr,
@@ -59,19 +59,19 @@ unsafe extern "C" {
     );
 
     #[doc = " Frees the memory allocated by table.\n\n @param table Table to be deallocated."]
-    pub fn gmpmee_spowm_clear(table: *mut gmpmee_spowm_tab);
+    fn gmpmee_spowm_clear(table: *mut gmpmee_spowm_tab);
 
     #[doc = " Fills the table with precomputed values using the given bases. The\n array of bases must be of the length for which the table was\n allocated.\n\n @param table Table to be initialized.\n @param bases Bases for which precomputation is performed."]
-    pub fn gmpmee_spowm_precomp(table: *mut gmpmee_spowm_tab, bases: *mut mpz_ptr);
+    fn gmpmee_spowm_precomp(table: *mut gmpmee_spowm_tab, bases: mpz_srcptr);
 
     #[doc = " Computes a simultaneous exponentiation using the given table and\n exponents. The number of exponents must match the number of bases\n that was used during precomputation.\n\n @param rop Destination of result.\n @param table Precomputed table representing the bases used.\n @param exponents Exponents used in simultaneous exponentiation."]
-    pub fn gmpmee_spowm_table(rop: mpz_ptr, table: *mut gmpmee_spowm_tab, exponents: *mut mpz_ptr);
+    fn gmpmee_spowm_table(rop: mpz_ptr, table: *mut gmpmee_spowm_tab, exponents: mpz_srcptr);
 
     #[doc = " Computes a simultaneous exponentiation. Precomputation is performed\n in blocks of the given width in batches of the given batch size.\n\n @param rop Destination of result.\n @param bases Bases for which precomputation is performed.\n @param exponents Exponents used in simultaneous exponentiation.\n @param len Number of bases in the simultaneous exponentiation.\n @param modulus Modulus.\n @param block_width Number of bases used to build each subtable.\n @param batch_len Number of bases in each batch, where each batch\n is computed independently."]
-    pub fn gmpmee_spowm_block_batch(
+    fn gmpmee_spowm_block_batch(
         rop: mpz_ptr,
-        bases: *mut mpz_ptr,
-        exponents: *mut mpz_ptr,
+        bases: mpz_srcptr,
+        exponents: mpz_srcptr,
         len: size_t,
         modulus: mpz_ptr,
         block_width: size_t,
@@ -81,8 +81,8 @@ unsafe extern "C" {
     #[doc = " Computes a simultaneous exponentiation. Precomputation is performed\n in blocks of a reasonable width in a single batch.\n\n @param rop Destination of result.\n @param bases Bases for which precomputation is performed.\n @param exponents Exponents used in simultaneous exponentiation.\n @param len Number of bases in the simultaneous exponentiation.\n @param modulus Modulus."]
     pub fn gmpmee_spowm(
         rop: mpz_ptr,
-        bases: *const mpz_srcptr,
-        exponents: *const mpz_srcptr,
+        bases: mpz_srcptr,
+        exponents: mpz_srcptr,
         len: size_t,
         modulus: mpz_srcptr,
     );
@@ -199,7 +199,7 @@ unsafe extern "C" {
     #[doc = " Executes a number or repetitions of the Miller-Rabin test using\n basis derived from the given GMP random source and returns 0 or 1\n depending on if the tested integer is deemed to be composite or\n not.\n\n <p>\n\n WARNING! GMP's random number generators are NOT cryptographically\n secure.\n\n <p>\n\n @param rstate State of random number generator.\n @param n Integer to test.\n @param reps Repetitions of the Miller-Rabin test performed."]
     pub fn gmpmee_millerrabin_rs(
         rstate: randstate_ptr,
-        n: mpz_ptr,
+        n: mpz_srcptr,
         reps: ::std::ffi::c_int,
     ) -> ::std::ffi::c_int;
 
@@ -264,7 +264,7 @@ unsafe extern "C" {
     #[doc = " Executes several repetitions of the of the Miller-Rabin test and\n returns 0 or 1 depending on if the tested integer is deemed to not\n be a safe prime, or a safe prime. The basis elements are derived\n from the given random number generator.\n\n <p>\n\n WARNING! GMP's random number generators are NOT cryptographically\n secure.\n\n <p>\n\n @param rstate State of random number generator.\n @param n Integer to test.\n @param reps Repetitions of the Miller-Rabin test performed."]
     pub fn gmpmee_millerrabin_safe_rs(
         rstate: randstate_ptr,
-        n: mpz_ptr,
+        n: mpz_srcptr,
         reps: ::std::ffi::c_int,
     ) -> ::std::ffi::c_int;
 
