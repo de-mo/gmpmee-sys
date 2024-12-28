@@ -29,7 +29,7 @@ use std::os::windows::fs as windows_fs;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 
-const GMPMEE_DIR: &'static str = "verificatum-gmpmee-2.1.0-c";
+const GMPMEE_DIR: &str = "verificatum-gmpmee-2.1.0-c";
 
 #[derive(Clone, Copy, PartialEq)]
 enum Target {
@@ -95,8 +95,7 @@ fn main() {
     };
 
     let make_check = there_is_env("CARGO_FEATURE_CTEST")
-        || (!there_is_env("CARGO_FEATURE_CNOTEST")
-            && cargo_env("PROFILE") == OsString::from("release"));
+        || (!there_is_env("CARGO_FEATURE_CNOTEST") && cargo_env("PROFILE") == *"release");
 
     // Get CC, CFLAGS and HOST from `cc` crate.
     let compiler = cc::Build::new().get_compiler();
@@ -129,15 +128,15 @@ fn main() {
     }
 
     let env = Environment {
-        rustc: rustc,
+        rustc,
         out_dir: out_dir.clone(),
         lib_dir: out_dir.join("lib"),
         include_dir: out_dir.join("include"),
         build_dir: out_dir.join("build"),
         //cache_dir: cache_dir,
         jobs: cargo_env("NUM_JOBS"),
-        target: target,
-        make_check: make_check,
+        target,
+        make_check,
         //version_prefix: version_prefix,
         //version_patch: version_patch,
         //newer_cache: false,
@@ -470,7 +469,7 @@ fn build_gmp(env: &Environment, lib: &Path, header: &Path) {
          ",
         &env.host
     );*/
-    let conf = format!("../gmpmee-src/configure");
+    let conf = "../gmpmee-src/configure".to_string();
     let mut configure = Command::new("sh");
     configure
         .current_dir(&build_dir)
@@ -481,9 +480,9 @@ fn build_gmp(env: &Environment, lib: &Path, header: &Path) {
     execute(configure);
     make_and_check(env, &build_dir);
     let build_lib = build_dir.join(".libs").join("libgmpmee.a");
-    copy_file_or_panic(&build_lib, &lib);
+    copy_file_or_panic(&build_lib, lib);
     let build_header = env.build_dir.join("gmpmee-src").join("gmpmee.h");
-    copy_file_or_panic(&build_header, &header);
+    copy_file_or_panic(&build_header, header);
 }
 
 /*fn process_gmp_header(header: &Path, out_file: &Path) {
@@ -590,11 +589,8 @@ fn write_link_info(env: &Environment, workaround_47048: Workaround47048) {
     println!("cargo:include_dir={}", include_str);
     println!("cargo:rustc-link-search=native={}", lib_str);
     println!("cargo:rustc-link-lib=static=gmp");
-    if env.target == Target::Mingw {
-        if workaround_47048 == Workaround47048::Yes {
-            println!("cargo:rustc-link-lib=static=workaround_47048");
-        }
-        //add_mingw_libs(feature_mpfr, feature_mpc);
+    if env.target == Target::Mingw && workaround_47048 == Workaround47048::Yes {
+        println!("cargo:rustc-link-lib=static=workaround_47048");
     }
 }
 
@@ -626,7 +622,7 @@ impl Environment {
             cmd.current_dir(&try_dir)
                 .stdout(Stdio::null())
                 .stderr(Stdio::null())
-                .args(&[&*filename, "--emit=dep-info,metadata"]);
+                .args([&*filename, "--emit=dep-info,metadata"]);
             println!("$ {:?} >& /dev/null", cmd);
             let status = cmd
                 .status()
@@ -676,17 +672,17 @@ fn check_for_bug_47048(env: &Environment) -> Workaround47048 {
     let mut cmd;
 
     cmd = Command::new("gcc");
-    cmd.current_dir(&try_dir).args(&["-fPIC", "-c", "say_hi.c"]);
+    cmd.current_dir(&try_dir).args(["-fPIC", "-c", "say_hi.c"]);
     execute(cmd);
 
     cmd = Command::new("ar");
     cmd.current_dir(&try_dir)
-        .args(&["cr", "libsay_hi.a", "say_hi.o"]);
+        .args(["cr", "libsay_hi.a", "say_hi.o"]);
     execute(cmd);
 
     cmd = Command::new("gcc");
     cmd.current_dir(&try_dir)
-        .args(&["c_main.c", "-L.", "-lsay_hi", "-o", "c_main.exe"]);
+        .args(["c_main.c", "-L.", "-lsay_hi", "-o", "c_main.exe"]);
     execute(cmd);
 
     // try simple rustc command that should work, so that failure
@@ -697,7 +693,7 @@ fn check_for_bug_47048(env: &Environment) -> Workaround47048 {
 
     cmd = Command::new(&rustc);
     cmd.current_dir(&try_dir)
-        .args(&["r_main.rs", "-L.", "-lsay_hi", "-o", "r_main.exe"])
+        .args(["r_main.rs", "-L.", "-lsay_hi", "-o", "r_main.exe"])
         .stdout(Stdio::null())
         .stderr(Stdio::null());
     println!(
@@ -715,16 +711,16 @@ fn check_for_bug_47048(env: &Environment) -> Workaround47048 {
 
         cmd = Command::new("gcc");
         cmd.current_dir(&try_dir)
-            .args(&["-fPIC", "-O2", "-c", "workaround.c"]);
+            .args(["-fPIC", "-O2", "-c", "workaround.c"]);
         execute(cmd);
 
         cmd = Command::new("ar");
         cmd.current_dir(&try_dir)
-            .args(&["cr", "libworkaround_47048.a", "workaround.o"]);
+            .args(["cr", "libworkaround_47048.a", "workaround.o"]);
         execute(cmd);
 
         cmd = Command::new(&rustc);
-        cmd.current_dir(&try_dir).args(&[
+        cmd.current_dir(&try_dir).args([
             "r_main.rs",
             "-L.",
             "-lsay_hi",
@@ -906,7 +902,7 @@ fn execute(mut command: Command) {
         .unwrap_or_else(|_| panic!("Cannot write to: {:?}", name));
 }*/
 
-const TRY_MAYBE_UNINIT: &'static str = r#"// try_maybe_uninit.rs
+const TRY_MAYBE_UNINIT: &str = r#"// try_maybe_uninit.rs
 use std::mem::MaybeUninit;
 fn main() {
     let mut x = MaybeUninit::<u8>::zeroed();
@@ -917,14 +913,14 @@ fn main() {
 }
 "#;
 
-const BUG_47048_SAY_HI_C: &'static str = r#"/* say_hi.c */
+const BUG_47048_SAY_HI_C: &str = r#"/* say_hi.c */
 #include <stdio.h>
 void say_hi(void) {
     fprintf(stdout, "hi!\n");
 }
 "#;
 
-const BUG_47048_C_MAIN_C: &'static str = r#"/* c_main.c */
+const BUG_47048_C_MAIN_C: &str = r#"/* c_main.c */
 void say_hi(void);
 int main(void) {
     say_hi();
@@ -932,7 +928,7 @@ int main(void) {
 }
 "#;
 
-const BUG_47048_R_MAIN_RS: &'static str = r#"// r_main.rs
+const BUG_47048_R_MAIN_RS: &str = r#"// r_main.rs
 extern "C" {
     fn say_hi();
 }
@@ -943,7 +939,7 @@ fn main() {
 }
 "#;
 
-const BUG_47048_WORKAROUND_C: &'static str = r#"/* workaround.c */
+const BUG_47048_WORKAROUND_C: &str = r#"/* workaround.c */
 #define _CRTBLD
 #include <stdio.h>
 
