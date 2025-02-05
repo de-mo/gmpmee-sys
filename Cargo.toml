@@ -30,3 +30,4 @@ version = "0.59"
 [build-dependencies]
 dirs = "5"
 cc = "1.2"
+fs_extra = "1.3"
