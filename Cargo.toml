@@ -1,6 +1,6 @@
 [package]
 name = "gmpmee-sys"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 categories = ["external-ffi-bindings", "mathematics", "no-std"]
 description = "Rust FFI bindings for GMPMEE"
@@ -28,6 +28,6 @@ features = [
 version = "0.59"
 
 [build-dependencies]
-dirs = "5"
+dirs = "6"
 cc = "1.2"
 fs_extra = "1.3"
