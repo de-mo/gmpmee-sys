@@ -36,13 +36,10 @@ enum Target {
 }
 
 struct Environment {
-    //rustc: OsString,
     out_dir: PathBuf,
     source_dir: PathBuf,
     lib_dir: PathBuf,
     include_dir: PathBuf,
-    build_dir: PathBuf,
-    //cache_dir: Option<PathBuf>,
     jobs: OsString,
     target: Target,
     make_check: bool,
@@ -51,8 +48,6 @@ struct Environment {
 }
 
 fn main() {
-    //let rustc = cargo_env("RUSTC");
-
     let src_dir = PathBuf::from(cargo_env("CARGO_MANIFEST_DIR"));
     let out_dir = PathBuf::from(cargo_env("OUT_DIR"));
 
@@ -64,7 +59,7 @@ fn main() {
     let target = if target.contains("-windows-msvc") {
         panic!("MSVC is not supported");
     } else if target.contains("-windows-gnu") {
-        Target::Mingw
+        panic!("Windows-gnu is not working now");
     } else {
         Target::Other
     };
@@ -103,13 +98,10 @@ fn main() {
     }
 
     let env = Environment {
-        //rustc,
         out_dir: out_dir.clone(),
         source_dir: out_dir.join(GMPMEE_DIR),
         lib_dir: out_dir.join("lib"),
         include_dir: out_dir.join("include"),
-        build_dir: out_dir.join("build"),
-        //cache_dir: None,
         jobs: cargo_env("NUM_JOBS"),
         target,
         make_check,
@@ -127,8 +119,7 @@ fn main() {
     );
 
     check_for_msvc(&env);
-    remove_dir_or_panic(&env.build_dir);
-    create_dir_or_panic(&env.build_dir);
+    check_for_windows_gnu(&env);
     remove_dir_or_panic(&env.source_dir);
     create_dir_or_panic(&env.source_dir);
 
@@ -138,18 +129,18 @@ fn main() {
 
     if !there_is_env("CARGO_FEATURE_CNODELETE") {
         remove_dir_or_panic(&env.source_dir);
-        remove_dir_or_panic(&env.build_dir);
     }
 
     write_link_info(&env);
 }
 
 fn build_gmpmee(env: &Environment, lib: &Path, header: &Path) {
-    let build_dir = env.build_dir.join("gmpmee-build");
-    create_dir_or_panic(&build_dir);
-    println!("$ cd {:?}", build_dir);
+    println!("$ cd {:?}", &env.source_dir);
     println!("$ export CC={:?}", &env.cc);
     println!("$ export CFLAGS={:?}", &env.cflags);
+    println!("$ cd {:?}", env.source_dir);
+    let test_cmd = Command::new("env");
+    execute(test_cmd);
     let mut create_conf = Command::new("sh");
     create_conf
         .current_dir(&env.source_dir)
@@ -216,6 +207,12 @@ fn there_is_env(name: &str) -> bool {
 fn check_for_msvc(env: &Environment) {
     if env.target == Target::Msvc {
         panic!("Windows MSVC target is not supported (linking would fail)");
+    }
+}
+
+fn check_for_windows_gnu(env: &Environment) {
+    if env.target == Target::Mingw {
+        panic!("Windows Mingw target is not supported (linking would fail)");
     }
 }
 
