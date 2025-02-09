@@ -196,7 +196,7 @@ unsafe extern "C" {
         reps: ::std::ffi::c_int,
     ) -> ::std::ffi::c_int;
 
-    #[doc = " Executes a number or repetitions of the Miller-Rabin test using\n basis derived from the given GMP random source and returns 0 or 1\n depending on if the tested integer is deemed to be composite or\n not.\n\n <p>\n\n WARNING! GMP's random number generators are NOT cryptographically\n secure.\n\n <p>\n\n @param rstate State of random number generator.\n @param n Integer to test.\n @param reps Repetitions of the Miller-Rabin test performed."]
+    #[doc = " Executes a number or repetitions of the Miller-Rabin test using\n basis derived from the given GMP random source and returns 0 or 1\n depending on if the tested integer is deemed to be composite or\n not.\n\n WARNING! GMP's random number generators are NOT cryptographically secure.\n\n @param rstate State of random number generator.\n @param n Integer to test.\n @param reps Repetitions of the Miller-Rabin test performed."]
     pub fn gmpmee_millerrabin_rs(
         rstate: randstate_ptr,
         n: mpz_srcptr,
@@ -261,14 +261,14 @@ unsafe extern "C" {
         reps: ::std::ffi::c_int,
     ) -> ::std::ffi::c_int;
 
-    #[doc = " Executes several repetitions of the of the Miller-Rabin test and\n returns 0 or 1 depending on if the tested integer is deemed to not\n be a safe prime, or a safe prime. The basis elements are derived\n from the given random number generator.\n\n <p>\n\n WARNING! GMP's random number generators are NOT cryptographically\n secure.\n\n <p>\n\n @param rstate State of random number generator.\n @param n Integer to test.\n @param reps Repetitions of the Miller-Rabin test performed."]
+    #[doc = " Executes several repetitions of the of the Miller-Rabin test and\n returns 0 or 1 depending on if the tested integer is deemed to not\n be a safe prime, or a safe prime. The basis elements are derived\n from the given random number generator.\n\n WARNING! GMP's random number generators are NOT cryptographically secure.\n\n @param rstate State of random number generator.\n @param n Integer to test.\n @param reps Repetitions of the Miller-Rabin test performed."]
     pub fn gmpmee_millerrabin_safe_rs(
         rstate: randstate_ptr,
         n: mpz_srcptr,
         reps: ::std::ffi::c_int,
     ) -> ::std::ffi::c_int;
 
-    #[doc = " Uses gmpmee_millerrabin_safe_rs to find the smallest safe prime\n larger than the input integer.\n\n <p>\n\n WARNING! GMP's random number generators are NOT cryptographically\n secure.\n\n <p>\n\n @param rop Found safe prime.\n @param rstate State of random number generator.\n @param n Integer to test.\n @param reps Repetitions of the Miller-Rabin test performed."]
+    #[doc = " Uses gmpmee_millerrabin_safe_rs to find the smallest safe prime\n larger than the input integer.\n\n WARNING! GMP's random number generators are NOT cryptographically secure.\n\n @param rop Found safe prime.\n @param rstate State of random number generator.\n @param n Integer to test.\n @param reps Repetitions of the Miller-Rabin test performed."]
     pub fn gmpmee_millerrabin_safe_next_rs(
         rop: mpz_ptr,
         rstate: randstate_ptr,
