@@ -15,8 +15,8 @@ links = "gmpmee"
 
 
 [dependencies]
-libc = { default-features = false, version = "0.2.44" }
-gmp-mpfr-sys = "1.6.4"
+libc = { default-features = false, version = "0.2" }
+gmp-mpfr-sys = "1.6"
 
 [target.'cfg(target_os = "windows")'.build-dependencies.windows-sys]
 features = [
