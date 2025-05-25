@@ -41,10 +41,11 @@
 //!
 //! # Building on GNU/Linux
 //! To build on GNU/Linux, simply make sure you have `diffutils`, `gcc`,
-//! `make`, `autotools`, `m4` and `gmp` installed on your system. For example on Debian:
+//! `make`, `autoconf`, `libtool`, `m4` and `gmp` installed on your system. For example on Debian:
 //!
 //! ```sh
-//! sudo dnf install diffutils gcc make m4 gmp
+//! sudo apt update
+//! sudo apt install diffutils gcc make m4 autoconf libtool libgmp3-dev
 //! ```
 //!
 //! # Building on macOS
