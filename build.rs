@@ -48,6 +48,12 @@ struct Environment {
 }
 
 fn main() {
+    if cfg!(target_os = "windows") {
+        println!("cargo:rustc-link-search=native=./gmpmee_lib_windows");
+        println!("cargo:rustc-link-lib=static=gmpmee");
+        return;
+    }
+
     let src_dir = PathBuf::from(cargo_env("CARGO_MANIFEST_DIR"));
     let out_dir = PathBuf::from(cargo_env("OUT_DIR"));
 
