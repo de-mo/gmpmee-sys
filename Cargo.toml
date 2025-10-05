@@ -1,6 +1,6 @@
 [package]
 name = "gmpmee-sys"
-version = "0.1.3"
+version = "0.2.0"
 edition = "2024"
 rust-version = "1.90"
 categories = ["external-ffi-bindings", "mathematics", "no-std"]
@@ -17,15 +17,6 @@ links = "gmpmee"
 [dependencies]
 libc = { default-features = false, version = "0.2" }
 gmp-mpfr-sys = "1.6"
-
-[target.'cfg(target_os = "windows")'.build-dependencies.windows-sys]
-features = [
-    "Win32_Foundation",
-    "Win32_Globalization",
-    "Win32_System_Com",
-    "Win32_UI_Shell",
-]
-version = "0.61"
 
 [build-dependencies]
 dirs = "6"

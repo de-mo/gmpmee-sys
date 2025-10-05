@@ -39,7 +39,7 @@ xcode-select --install
 
 ## Building on Windows
 
-Actually the crate is not working for Windows
+The static library libgmbmee.a is delivered with the crate.
 
 ## Licence
 
